@@ -1,28 +1,26 @@
-{{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+{{- range $index, $service := .Values.services }}
+{{- if $service.hpa }}
+---
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "fastapiapp.fullname" . }}
-  labels:
-    {{- include "fastapiapp.labels" . | nindent 4 }}
+  name: {{ $service.name }}-hpa
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "1"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "fastapiapp.fullname" . }}
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+    name: {{ $service.name }}
+  minReplicas: {{ $service.hpa.minReplicas }}
+  maxReplicas: {{ $service.hpa.maxReplicas }}
   metrics:
-    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
-    {{- end }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: memory
-        targetAverageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    {{- end }}
+        target:
+          type: Utilization
+          averageUtilization: {{ $service.hpa.cpuTarget }}
+{{- end }}
 {{- end }}

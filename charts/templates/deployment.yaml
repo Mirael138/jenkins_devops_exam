@@ -1,61 +1,58 @@
+{{- range $index, $service := .Values.services }}
+{{- if eq $service.type "deployment" }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fastapiapp.fullname" . }}
-  labels:
-    {{- include "fastapiapp.labels" . | nindent 4 }}
+  name: {{ .name }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .replicas }}
   selector:
     matchLabels:
-      {{- include "fastapiapp.selectorLabels" . | nindent 6 }}
+      app: {{ .name }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "fastapiapp.selectorLabels" . | nindent 8 }}
+        app: {{ .name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "fastapiapp.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .name }}
+          image: "{{ .image.repository }}:{{ .image.tag }}"
+          command: ["uvicorn"]
+          args: ["app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+          resources: 
+            {{- if .resources }}
+            requests:
+              cpu: "{{ .resources.requests.cpu }}"
+              memory: "{{ .resources.requests.memory }}"
+            limits:
+              cpu: "{{ .resources.limits.cpu }}"
+              memory: "{{ .resources.limits.memory }}"
+            {{- else }}
+            {}
+            {{- end }}
           ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /api/v1/checkapi
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /api/v1/checkapi
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+            - containerPort: {{ .targetPort }}
+          env:
+            {{- if .env }}
+            {{- range .env }}
+              {{- if .value }}
+            - name: {{ .name }}
+              value: "{{ .value }}"
+              {{- else if .key }}
+            - name: {{ .name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .key }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+          {{- if .extraArgs }}
+          args:
+            {{- range .extraArgs }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
+{{- end }}
+{{- end }}
