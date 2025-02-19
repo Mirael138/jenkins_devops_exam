@@ -7,13 +7,16 @@ agent any
 stages {
         stage(' Docker Build'){ // docker build image stage
             steps {
+             // Afficher la branche actuelle pour la vérifier
+        echo "Current branch: ${env.BRANCH_NAME}"
+        
                 script {
                 sh '''
                  docker build -f movie-service/Dockerfile -t $DOCKER_ID/movie_service:$DOCKER_TAG movie-service/
 				         docker build -f cast-service/Dockerfile -t $DOCKER_ID/cast_service:$DOCKER_TAG cast-service/
                 sleep 6
                 '''
-                }
+                } 
             }
         }
 		
