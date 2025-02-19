@@ -29,8 +29,8 @@ stages {
                 script {
                 sh '''
                  docker login -u $DOCKER_ID -p $DOCKER_PASS
-                 docker push $DOCKER_ID/movie-service:$DOCKER_TAG
-				         docker push $DOCKER_ID/cast-service:$DOCKER_TAG
+                 docker push $DOCKER_ID/movie_service:$DOCKER_TAG
+				         docker push $DOCKER_ID/cast_service:$DOCKER_TAG
                 '''
                 }
             }
