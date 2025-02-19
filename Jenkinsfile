@@ -93,7 +93,6 @@ stages {
                 cp charts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s+repository.*+repository: ${DOCKER_ID}/${DOCKER_IMAGE}+g" values.yml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace dev
                 '''
@@ -117,7 +116,6 @@ stages {
                 cp charts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s+repository.*+repository: ${DOCKER_ID}/${DOCKER_IMAGE}+g" values.yml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace staging
                 '''
@@ -142,7 +140,6 @@ stages {
                 cp charts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s+repository.*+repository: ${DOCKER_ID}/${DOCKER_IMAGE}+g" values.yml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace qa
                 '''
@@ -176,7 +173,6 @@ stages {
                 cp charts/values.yaml values.yml
                 cat values.yml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s+repository.*+repository: ${DOCKER_ID}/${DOCKER_IMAGE}+g" values.yml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace prod
                 '''
