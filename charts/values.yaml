@@ -126,3 +126,6 @@ services:
           storage: 10Gi
       storageClassName: "local-path"
     
+ingress: 
+  enabled: true
+  namespace: prod
