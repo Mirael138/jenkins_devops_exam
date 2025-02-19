@@ -95,7 +95,7 @@ stages {
                 cp charts/values.yaml values.yaml
                 cat values.yaml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
-                sed -i 's/ingress:\\n  enabled: true/ingress:\\n  enabled: false/' values.yaml
+                sed -i 's/^\([[:space:]]*enabled:[[:space:]]*\)true/\1false/' values.yaml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace dev
                 '''
@@ -119,7 +119,7 @@ stages {
                 cp charts/values.yaml values.yaml
                 cat values.yaml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
-                sed -i 's/ingress:\\n  enabled: true/ingress:\\n  enabled: false/' values.yaml
+                sed -i 's/^\([[:space:]]*enabled:[[:space:]]*\)true/\1false/' values.yaml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace staging
                 '''
@@ -144,7 +144,7 @@ stages {
                 cp charts/values.yaml values.yaml
                 cat values.yaml 
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
-                sed -i 's/ingress:\\n  enabled: true/ingress:\\n  enabled: false/' values.yaml
+                 sed -i 's/^\([[:space:]]*enabled:[[:space:]]*\)true/\1false/' values.yaml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace qa
                 '''
@@ -183,7 +183,7 @@ stages {
                 cp charts/values.yaml values.yaml
                 cat values.yaml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
-                sed -i 's/ingress:\\n  enabled: false/ingress:\\n  enabled: true/' values.yaml
+                 sed -i 's/^\([[:space:]]*enabled:[[:space:]]*\)true/\1true/' values.yaml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace prod
                 '''
