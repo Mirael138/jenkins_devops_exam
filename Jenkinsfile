@@ -159,8 +159,9 @@ stages {
         }
         when{
               expression{
-                     echo "Current branch: ${env.BRANCH_NAME}" 
-                     return env.BRANCH_NAME == 'master'
+                     def branchName = env.GIT_BRANCH?.replaceFirst('origin/', '')
+                     echo "Current branch: ${branchName}" 
+                     return branchName == 'master'
               }
         }
             steps {
