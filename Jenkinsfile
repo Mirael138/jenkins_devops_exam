@@ -7,8 +7,6 @@ agent any
 stages {
         stage(' Docker Build'){ // docker build image stage
             steps {
-             // Afficher la branche actuelle pour la vérifier
-        echo "Current branch: ${env.BRANCH_NAME}"
         
                 script {
                 sh '''
@@ -86,7 +84,11 @@ stages {
         {
         KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
         }
+        
             steps {
+            
+            // Afficher la branche actuelle pour la vérifier
+        echo "Current branch: ${env.BRANCH_NAME}"
                 script {
                 sh '''
                 rm -Rf .kube
