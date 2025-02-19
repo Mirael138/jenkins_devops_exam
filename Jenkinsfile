@@ -89,6 +89,7 @@ stages {
             
             // Afficher la branche actuelle pour la vérifier
         echo "Current branch: ${env.BRANCH_NAME}"
+        echo "Current git branch : ${env.GIT_BRANCH}"
                 script {
                 sh '''
                 rm -Rf .kube
