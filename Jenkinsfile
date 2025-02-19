@@ -94,8 +94,9 @@ stages {
                 cat $KUBECONFIG > .kube/config
                 cp charts/values.yaml values.yaml
                 cat values.yaml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
+                sed -i 's/ingress:\\n  enabled: true/ingress:\\n  enabled: false/' values.yaml
+                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace dev
                 '''
                 }
@@ -115,10 +116,11 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp charts/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
+                cp charts/values.yaml values.yaml
+                cat values.yaml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
+                sed -i 's/ingress:\\n  enabled: true/ingress:\\n  enabled: false/' values.yaml
+                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace staging
                 '''
                 }
@@ -139,10 +141,11 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp charts/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
+                cp charts/values.yaml values.yaml
+                cat values.yaml 
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
+                sed -i 's/ingress:\\n  enabled: true/ingress:\\n  enabled: false/' values.yaml
+                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace qa
                 '''
                 }
@@ -177,10 +180,11 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp charts/values.yaml values.yml
-                cat values.yml
-                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
-                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
+                cp charts/values.yaml values.yaml
+                cat values.yaml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yaml
+                sed -i 's/ingress:\\n  enabled: false/ingress:\\n  enabled: true/' values.yaml
+                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yaml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace prod
                 '''
                 }
