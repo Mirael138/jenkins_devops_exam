@@ -90,8 +90,8 @@ stages {
                 mkdir .kube
                 ls
                 cat $KUBECONFIG > .kube/config
-                cp charts/values.yaml values.yml
-                cat values.yml
+                cp charts/values.yaml values.yaml
+                cat values.yaml
                 sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace dev
