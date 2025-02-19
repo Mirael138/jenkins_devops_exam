@@ -83,7 +83,6 @@ services:
     replicas: 1
     image:
       repository: postgres
-      tag: latest
     port: 5432
     targetPort: 5432
     serviceType: ClusterIP
@@ -107,7 +106,6 @@ services:
     replicas: 1
     image:
       repository: postgres
-      tag: latest
     port: 5432
     targetPort: 5432
     serviceType: ClusterIP
