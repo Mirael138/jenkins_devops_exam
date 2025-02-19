@@ -9,8 +9,8 @@ stages {
             steps {
                 script {
                 sh '''
-                 docker build -f movie-service/Dockerfile -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-service/
-				         docker build -f cast-service/Dockerfile -t $DOCKER_ID/cast-service:$DOCKER_TAG cast-service/
+                 docker build -f movie-service/Dockerfile -t $DOCKER_ID/movie_service:$DOCKER_TAG movie-service/
+				         docker build -f cast-service/Dockerfile -t $DOCKER_ID/cast_service:$DOCKER_TAG cast-service/
                 sleep 6
                 '''
                 }
@@ -60,7 +60,7 @@ stages {
                         --docker-username=$DOCKER_ID \
                         --docker-password=$DOCKER_PASS \
                         --docker-email=votre@email.com \
-                        -n QA --dry-run=client -o yaml | kubectl apply -f -
+                        -n qa --dry-run=client -o yaml | kubectl apply -f -
                     kubectl create secret docker-registry regcred \
                         --docker-server=https://index.docker.io/v1/ \
                         --docker-username=$DOCKER_ID \
@@ -120,6 +120,31 @@ stages {
                 sed -i "s+repository.*+repository: ${DOCKER_ID}/${DOCKER_IMAGE}+g" values.yml
                 sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
                 helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace staging
+                '''
+                }
+            }
+
+        }
+        
+        
+   stage('Deploiement en qa'){
+        environment
+        {
+        KUBECONFIG = credentials("config") // we retrieve  kubeconfig from secret file called config saved on jenkins
+        }
+            steps {
+                script {
+                sh '''
+                rm -Rf .kube
+                mkdir .kube
+                ls
+                cat $KUBECONFIG > .kube/config
+                cp fastapi/values.yaml values.yml
+                cat values.yml
+                sed -i "s+tag.*+tag: ${DOCKER_TAG}+g" values.yml
+                sed -i "s+repository.*+repository: ${DOCKER_ID}/${DOCKER_IMAGE}+g" values.yml
+                sed -i "s/imagePullSecrets:.*/imagePullSecrets:\\n  - name: regcred/g" values.yml
+                helm upgrade --install eval-jenkins-chart charts/ --values=values.yaml --namespace qa
                 '''
                 }
             }

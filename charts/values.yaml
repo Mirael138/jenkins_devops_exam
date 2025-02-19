@@ -76,26 +76,6 @@ services:
       maxReplicas: 6
       cpuTarget: 70
       
-      
-  - name: test
-    type: "deployment"
-    image:
-      repository: mirael13/test_service
-      tag: latest
-    port: 80
-    targetPort: 8000
-    serviceType: ClusterIP
-    resources:
-      requests:
-        cpu: "250m"
-        memory: "256Mi"
-      limits:
-        cpu: "500m"
-        memory: "512Mi"
-    hpa: 
-      minReplicas: 2
-      maxReplicas: 6
-      cpuTarget: 70
   
   
   - name: movie-db

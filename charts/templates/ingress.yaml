@@ -28,11 +28,3 @@ spec:
                 name: cast-service
                 port:
                   number: 80
-                  
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: test-service
-                port:
-                  number: 80
