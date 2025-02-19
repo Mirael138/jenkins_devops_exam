@@ -1,7 +1,6 @@
 pipeline {
 environment { // Declaration of environment variables
 DOCKER_ID = "mirael13" 
-DOCKER_IMAGE = "datascientestapi"
 DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
 }
 agent any 
@@ -10,8 +9,8 @@ stages {
             steps {
                 script {
                 sh '''
-                 docker build -f movie-service/Dockerfile -t $DOCKER_ID/movie-service:$DOCKER_TAG
-				         docker build -f cast-service/Dockerfile -t $DOCKER_ID/cast-service:$DOCKER_TAG
+                 docker build -f movie-service/Dockerfile -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-service/
+				         docker build -f cast-service/Dockerfile -t $DOCKER_ID/cast-service:$DOCKER_TAG cast-service/
                 sleep 6
                 '''
                 }
