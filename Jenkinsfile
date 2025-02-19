@@ -86,10 +86,6 @@ stages {
         }
         
             steps {
-            
-            // Afficher la branche actuelle pour la vérifier
-        echo "Current branch: ${env.BRANCH_NAME}"
-        echo "Current git branch : ${env.GIT_BRANCH}"
                 script {
                 sh '''
                 rm -Rf .kube
@@ -162,7 +158,9 @@ stages {
         BRANCH_NAME = "${env.GIT_BRANCH.replaceFirst('origin/', '')}"
         }
         when{
-        return env.BRANCH_NAME == 'master'
+              expresssion{
+                     return env.BRANCH_NAME == 'master'
+              }
         }
             steps {
             // Create an Approval Button with a timeout of 15minutes.
